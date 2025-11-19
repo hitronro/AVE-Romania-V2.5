@@ -17,7 +17,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, setView, currentUser, setC
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <h1 className="text-xl font-extrabold text-ave-dark-blue dark:text-slate-100">
+            <h1 className="text-lg sm:text-xl font-extrabold text-ave-dark-blue dark:text-slate-100 truncate">
               Gala <span className="text-ave-blue">Directorii Anului</span>
             </h1>
             <span className="ml-3 text-xs font-semibold text-gray-400 dark:text-slate-500 hidden md:block border-l pl-3 border-gray-300 dark:border-slate-600">Platformă Jurizare</span>

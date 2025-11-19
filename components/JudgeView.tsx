@@ -165,28 +165,35 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, category, assi
         [Status.NEINCEPUT]: 'bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-300',
     };
     return (
-        <Card onClick={onEvaluate} className="p-4 sm:p-5 flex flex-row items-start space-x-4 sm:space-x-5 cursor-pointer hover:shadow-lg hover:ring-2 hover:ring-ave-blue transition-all duration-200 active:scale-[0.99] active:bg-gray-50 dark:active:bg-slate-700/50">
-            <img 
-                src={candidate.pozaUrl} 
-                alt={candidate.nume} 
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover flex-shrink-0" 
-            />
-            <div className="flex-grow min-w-0">
-                <div className="flex justify-between items-start gap-2">
-                    <h3 className="font-bold text-lg sm:text-xl text-ave-dark-blue dark:text-slate-100 truncate pr-2">
-                        {candidate.nume}
-                    </h3>
-                    <span className={`text-sm font-semibold px-3 py-1.5 rounded-full flex-shrink-0 ${statusStyles[assignment.status]}`}>
-                        {assignment.status}
-                    </span>
-                </div>
-                <p className="text-base text-gray-600 dark:text-slate-400 truncate mt-1">{candidate.scoala}</p>
-                <p className="text-sm text-gray-500 dark:text-slate-500 mt-1 truncate">{candidate.titlu}</p>
-                 <p className="mt-3 text-sm text-ave-blue font-semibold bg-ave-blue/10 dark:bg-ave-blue/20 px-3 py-1.5 rounded-full inline-block">
-                     {category?.nume || 'Categorie necunoscută'}
-                 </p>
+    <Card onClick={onEvaluate} className="p-3 sm:p-5 cursor-pointer hover:shadow-lg hover:ring-2 hover:ring-ave-blue transition-all duration-200 active:scale-[0.99] active:bg-gray-50 dark:active:bg-slate-700/50">
+      <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
+        <img 
+          src={candidate.pozaUrl} 
+          alt={candidate.nume} 
+          className="w-full sm:w-20 h-44 sm:h-20 rounded-xl object-cover flex-shrink-0" 
+        />
+        <div className="flex-grow min-w-0">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+            <h3 className="font-bold text-lg sm:text-xl text-ave-dark-blue dark:text-slate-100 truncate pr-2">
+              {candidate.nume}
+            </h3>
+            <div className="mt-2 sm:mt-0 flex items-center gap-2">
+              <span className={`text-sm font-semibold px-3 py-1.5 rounded-full flex-shrink-0 ${statusStyles[assignment.status]}`}>
+                {assignment.status}
+              </span>
+              <p className="hidden sm:block mt-0 text-sm text-ave-blue font-semibold bg-ave-blue/10 dark:bg-ave-blue/20 px-3 py-1.5 rounded-full inline-block">
+                {category?.nume || 'Categorie necunoscută'}
+              </p>
             </div>
-        </Card>
+          </div>
+          <p className="text-base text-gray-600 dark:text-slate-400 truncate mt-1">{candidate.scoala}</p>
+          <p className="text-sm text-gray-500 dark:text-slate-500 mt-1 truncate">{candidate.titlu}</p>
+          <p className="mt-3 text-sm text-ave-blue font-semibold bg-ave-blue/10 dark:bg-ave-blue/20 px-3 py-1.5 rounded-full inline-block sm:hidden">
+            {category?.nume || 'Categorie necunoscută'}
+          </p>
+        </div>
+      </div>
+    </Card>
     )
 }
 

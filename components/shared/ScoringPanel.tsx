@@ -108,16 +108,16 @@ const ScoringPanel: React.FC<ScoringPanelProps> = ({ assignment, candidate, crit
     }
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-stretch sm:justify-end" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="scoring-panel-title">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex flex-col items-center justify-end sm:justify-center overflow-hidden" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="scoring-panel-title">
             <div 
-                className="w-full sm:max-w-2xl h-[95vh] sm:h-full bg-white dark:bg-slate-800 shadow-2xl flex flex-col rounded-t-3xl sm:rounded-none animate-slide-up sm:animate-none"
+                className="w-full max-w-full sm:max-w-2xl max-h-[90vh] bg-white dark:bg-slate-800 shadow-2xl flex flex-col rounded-t-3xl sm:rounded-lg animate-slide-up sm:animate-none overflow-hidden"
                 onClick={e => e.stopPropagation()}
             >
-                <header className="relative p-4 sm:px-6 sm:py-4 border-b dark:border-slate-700 sticky top-0 bg-white dark:bg-slate-800 z-10 flex-shrink-0">
+                <header className="relative p-3 sm:px-6 sm:py-4 border-b dark:border-slate-700 sticky top-0 bg-white dark:bg-slate-800 z-10 flex-shrink-0">
                     <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-1.5 bg-gray-300 dark:bg-slate-600 rounded-full sm:hidden"></div>
-                    <div className="flex justify-between items-center w-full pt-6 sm:pt-0">
+                    <div className="flex justify-between items-center w-full pt-3 sm:pt-0">
                         <div className="min-w-0 flex-1">
-                            <h3 id="scoring-panel-title" className="text-xl sm:text-2xl font-bold text-ave-dark-blue dark:text-slate-100 truncate">{candidate.nume}</h3>
+                            <h3 id="scoring-panel-title" className="text-lg sm:text-2xl font-bold text-ave-dark-blue dark:text-slate-100 truncate">{candidate.nume}</h3>
                             <p className="text-sm text:md text-gray-500 dark:text-slate-400 truncate">{candidate.scoala}</p>
                         </div>
                         <button onClick={onClose} className="p-3 -m-3 text-gray-500 hover:text-gray-800 dark:text-slate-400 dark:hover:text-slate-100 flex-shrink-0 ml-4">
@@ -126,9 +126,9 @@ const ScoringPanel: React.FC<ScoringPanelProps> = ({ assignment, candidate, crit
                         </button>
                     </div>
                 </header>
-                <div className="flex-grow overflow-y-auto overflow-x-hidden p-3 sm:p-6 space-y-4 sm:space-y-6">
+                <div className="flex-grow overflow-y-auto overflow-x-hidden p-3 sm:p-6 space-y-4 sm:space-y-6 overscroll-contain w-full" style={{ WebkitOverflowScrolling: 'touch' }}>
                     {relevantCriteria.map(criterion => (
-                        <div key={criterion.id} className="overflow-x-hidden">
+                        <div key={criterion.id} className="overflow-x-hidden w-full">
                             <div className="flex items-center gap-2 flex-wrap">
                                 <h4 className="font-bold text-gray-800 dark:text-slate-200 truncate">{criterion.nume} <span className="font-normal text-gray-500 dark:text-slate-400">({(criterion.pondere * 100)}%)</span></h4>
                                 <Tooltip content="Ponderea acestui criteriu în calculul scorului final. Totalul ponderilor pentru o categorie/etapă trebuie să fie 100%.">
@@ -149,19 +149,19 @@ const ScoringPanel: React.FC<ScoringPanelProps> = ({ assignment, candidate, crit
 
                            <div className="space-y-4">
                                 <div className="flex flex-col gap-4 bg-gray-100 dark:bg-slate-700/50 p-4 rounded-xl">
-                                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
                                         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 w-full sm:w-auto">
                                             <button 
                                                 onClick={() => handleScoreChange(criterion.id, criterion.scorMin)}
                                                 disabled={isReadOnly}
-                                                className="px-4 py-2.5 text-sm sm:text-base font-medium text-gray-600 dark:text-slate-300 bg-white dark:bg-slate-600 border border-gray-300 dark:border-slate-500 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-500 active:scale-95 disabled:opacity-50 transition-all touch-manipulation"
+                                                className="px-3 py-2.5 text-sm sm:text-base font-medium text-gray-600 dark:text-slate-300 bg-white dark:bg-slate-600 border border-gray-300 dark:border-slate-500 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-500 active:scale-95 disabled:opacity-50 transition-all touch-manipulation"
                                             >
                                                 Minim: {criterion.scorMin}
                                             </button>
                                             <button 
                                                 onClick={() => handleScoreChange(criterion.id, criterion.scorMax)}
                                                 disabled={isReadOnly}
-                                                className="px-4 py-2.5 text-sm sm:text-base font-medium text-gray-600 dark:text-slate-300 bg-white dark:bg-slate-600 border border-gray-300 dark:border-slate-500 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-500 active:scale-95 disabled:opacity-50 transition-all touch-manipulation"
+                                                className="px-3 py-2.5 text-sm sm:text-base font-medium text-gray-600 dark:text-slate-300 bg-white dark:bg-slate-600 border border-gray-300 dark:border-slate-500 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-500 active:scale-95 disabled:opacity-50 transition-all touch-manipulation"
                                             >
                                                 Maxim: {criterion.scorMax}
                                             </button>
@@ -173,7 +173,7 @@ const ScoringPanel: React.FC<ScoringPanelProps> = ({ assignment, candidate, crit
                                                 pattern="[0-9]*"
                                                 min={criterion.scorMin}
                                                 max={criterion.scorMax}
-                                                value={localScores[criterion.id] === undefined || localScores[criterion.id] === 0 ? '' : localScores[criterion.id]}
+                                                value={localScores[criterion.id] === undefined ? '' : localScores[criterion.id]}
                                                 onChange={e => {
                                                     const value = e.target.value;
                                                     if (value === '') {
@@ -225,7 +225,7 @@ const ScoringPanel: React.FC<ScoringPanelProps> = ({ assignment, candidate, crit
                                                     }
                                                 }}
                                                 disabled={isReadOnly}
-                                                className="w-28 h-20 sm:h-24 text-center text-3xl sm:text-4xl font-bold text-ave-blue bg-white dark:bg-slate-600 border-2 border-gray-300 dark:border-slate-500 rounded-xl focus:ring-2 focus:ring-ave-blue focus:border-ave-blue active:ring-2 cursor-text touch-manipulation"
+                                                className="w-20 sm:w-28 h-14 sm:h-24 text-center text-2xl sm:text-4xl font-bold text-ave-blue bg-white dark:bg-slate-600 border-2 border-gray-300 dark:border-slate-500 rounded-xl focus:ring-2 focus:ring-ave-blue focus:border-ave-blue active:ring-2 cursor-text touch-manipulation"
                                                 aria-label={`Scor pentru ${criterion.nume}`}
                                             />
                                         </div>
@@ -242,7 +242,7 @@ const ScoringPanel: React.FC<ScoringPanelProps> = ({ assignment, candidate, crit
                                         style={{ touchAction: 'manipulation' }}
                                     />
                                 </div>
-                                <div className="relative">
+                                <div className="relative w-full">
                                     <ChatBubbleLeftIcon className="absolute left-4 top-4 text-gray-400 dark:text-slate-400 w-6 h-6"/>
                                     <textarea
                                         rows={3}
@@ -250,28 +250,28 @@ const ScoringPanel: React.FC<ScoringPanelProps> = ({ assignment, candidate, crit
                                         value={localObservations[criterion.id] || ''}
                                         onChange={e => handleObservationChange(criterion.id, e.target.value)}
                                         disabled={isReadOnly}
-                                        className="w-full pl-12 pr-4 py-3 text-base border-gray-300 rounded-xl focus:ring-ave-blue focus:border-ave-blue dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder-slate-400 disabled:opacity-50 resize-none"
+                                        className="w-full pl-12 pr-4 py-3 text-base border border-gray-300 rounded-xl focus:ring-ave-blue focus:border-ave-blue dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder-slate-400 disabled:opacity-50 resize-none"
                                     />
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
-                 <footer className="p-4 sm:p-5 border-t dark:border-slate-700 sticky bottom-0 bg-white dark:bg-slate-800 z-10 flex flex-col gap-4 flex-shrink-0">
-                    <div className="flex items-center justify-between">
-                        <span className="text-sm sm:text-base text-gray-600 dark:text-slate-400">Scor Final Ponderat:</span>
-                        <p className="text-3xl sm:text-4xl font-extrabold text-ave-blue">{finalScore.toFixed(2)}</p>
+                 <footer className="p-4 sm:p-5 border-t dark:border-slate-700 sticky bottom-0 bg-white dark:bg-slate-800 z-10 flex flex-col gap-4 flex-shrink-0 w-full overflow-x-hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}>
+                    <div className="flex items-center justify-between gap-2">
+                        <span className="text-sm sm:text-base text-gray-600 dark:text-slate-400 flex-shrink-0">Scor Final:</span>
+                        <p className="text-2xl sm:text-4xl font-extrabold text-ave-blue flex-shrink-0">{finalScore.toFixed(2)}</p>
                     </div>
                     {isReadOnly ? (
                          <p className="text-base font-semibold text-center text-green-700 bg-green-100 dark:text-green-300 dark:bg-green-900/50 px-4 py-3 rounded-xl">Evaluare Finalizată</p>
                     ) : isAdmin ? (
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-3 w-full">
                             <input
                                 type="text"
                                 placeholder="Motivul modificării (obligatoriu)"
                                 value={reason}
                                 onChange={e => setReason(e.target.value)}
-                                className="w-full px-4 py-3.5 text-base border-gray-300 rounded-xl focus:ring-ave-blue focus:border-ave-blue dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder-slate-400"
+                                className="w-full px-4 py-3.5 text-base border border-gray-300 rounded-xl focus:ring-ave-blue focus:border-ave-blue dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:placeholder-slate-400"
                             />
                              <button 
                                 onClick={() => handleSave(assignment.status)} 
@@ -281,16 +281,16 @@ const ScoringPanel: React.FC<ScoringPanelProps> = ({ assignment, candidate, crit
                              </button>
                         </div>
                     ) : (
-                         <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3 w-full">
                             <button 
                                 onClick={() => handleSave(Status.IN_CURS)} 
-                                className="py-4 rounded-xl text-base font-semibold border-2 border-gray-300 hover:bg-gray-100 active:bg-gray-200 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700 dark:active:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" 
+                                className="flex-1 py-4 rounded-xl text-base font-semibold border-2 border-gray-300 hover:bg-gray-100 active:bg-gray-200 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700 dark:active:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" 
                                 disabled={Object.keys(validationErrors).length > 0}>
                                 Salvează Progres
                             </button>
                             <button 
                                 onClick={() => handleSave(Status.FINALIZAT)} 
-                                className="py-4 rounded-xl text-base font-semibold text-white bg-ave-blue hover:bg-ave-dark-blue active:bg-ave-dark-blue/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" 
+                                className="flex-1 py-4 rounded-xl text-base font-semibold text-white bg-ave-blue hover:bg-ave-dark-blue active:bg-ave-dark-blue/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" 
                                 disabled={Object.keys(validationErrors).length > 0}>
                                 Trimite Final
                             </button>
