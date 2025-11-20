@@ -3,7 +3,7 @@ import { Candidat, Jurat, Assignment, Status, Criterion, Category, Regiune } fro
 import Card from './shared/Card';
 import { SearchIcon, SlidersIcon, UserGroupIcon } from './shared/icons';
 import ScoringPanel from './shared/ScoringPanel';
-import SubmissionModal from './shared/SubmissionModal';
+import CandidateEvaluationModal from './shared/CandidateEvaluationModal';
 
 interface JudgeViewProps {
   candidates: Candidat[];
@@ -20,7 +20,7 @@ const JudgeView: React.FC<JudgeViewProps> = ({ candidates, assignments, criteria
   const [statusFilter, setStatusFilter] = useState<Status | 'all'>('all');
   const [regionFilter, setRegionFilter] = useState<Regiune | 'all'>('all');
   const [selectedAsignmentId, setSelectedAsignmentId] = useState<string | null>(null);
-  const [submissionCandidate, setSubmissionCandidate] = useState<string | null>(null);
+  const [evaluationAssignmentId, setEvaluationAssignmentId] = useState<string | null>(null);
 
   useEffect(() => {
     if (selectedAsignmentId) {
@@ -65,10 +65,14 @@ const JudgeView: React.FC<JudgeViewProps> = ({ candidates, assignments, criteria
       return assignments.find(a => a.id === selectedAsignmentId);
   }, [selectedAsignmentId, assignments]);
 
-  const selectedSubmissionCandidate = useMemo(() => {
-    if (!submissionCandidate) return undefined;
-    return candidates.find(c => c.id === submissionCandidate);
-  }, [submissionCandidate, candidates]);
+  const selectedEvaluation = useMemo(() => {
+    if (!evaluationAssignmentId) return undefined;
+    const a = assignments.find(x => x.id === evaluationAssignmentId);
+    if (!a) return undefined;
+    const c = candidates.find(cc => cc.id === a.candidatId);
+    const cat = categories.find(ct => ct.id === a.categorieId);
+    return { a, c: c!, cat };
+  }, [evaluationAssignmentId, assignments, candidates, categories]);
 
   const handleSaveAssignment = (updatedAssignment: Assignment) => {
     setAssignments(prev => prev.map(a => a.id === updatedAssignment.id ? updatedAssignment : a));
@@ -141,7 +145,7 @@ const JudgeView: React.FC<JudgeViewProps> = ({ candidates, assignments, criteria
                 category={category}
                 assignment={assignment}
                 onEvaluate={() => openScoringPanel(assignment.id)}
-                onViewSubmission={() => setSubmissionCandidate(candidate.id)}
+                onViewSubmission={() => setEvaluationAssignmentId(assignment.id)}
               />
             );
           })}
@@ -164,12 +168,18 @@ const JudgeView: React.FC<JudgeViewProps> = ({ candidates, assignments, criteria
         />
       )}
 
-      {/* Submission modal - shows external submission content */}
-      {selectedSubmissionCandidate && (
-        <SubmissionModal
-          candidate={selectedSubmissionCandidate}
-          open={!!submissionCandidate}
-          onClose={() => setSubmissionCandidate(null)}
+      {selectedEvaluation && (
+        <CandidateEvaluationModal
+          open={!!evaluationAssignmentId}
+          candidate={selectedEvaluation.c}
+          assignment={selectedEvaluation.a}
+          category={selectedEvaluation.cat}
+          currentJudge={currentJudge}
+          criteria={criteria}
+          onClose={() => setEvaluationAssignmentId(null)}
+          onUpdateAssignment={(updated) => {
+            setAssignments(prev => prev.map(a => a.id === updated.id ? updated : a));
+          }}
         />
       )}
     </div>
@@ -224,7 +234,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, category, assi
             onClick={(e) => { e.stopPropagation(); onViewSubmission(); }}
             className="px-3 py-2 text-sm font-semibold bg-gray-100 dark:bg-slate-700 rounded-lg text-ave-dark-blue dark:text-slate-100"
           >
-            Vezi lucrarea
+            {assignment.status === Status.FINALIZAT ? 'Vezi scorul' : 'Vezi lucrarea'}
           </button>
         </div>
     </Card>

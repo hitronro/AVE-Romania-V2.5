@@ -118,7 +118,7 @@ const ScoringPanel: React.FC<ScoringPanelProps> = ({ assignment, candidate, crit
                     <div className="flex justify-between items-center w-full pt-3 sm:pt-0">
                         <div className="min-w-0 flex-1">
                             <h3 id="scoring-panel-title" className="text-lg sm:text-2xl font-bold text-ave-dark-blue dark:text-slate-100 truncate">{candidate.nume}</h3>
-                            <p className="text-sm text:md text-gray-500 dark:text-slate-400 truncate">{candidate.scoala}</p>
+                            <p className="text-sm sm:text-base text-gray-500 dark:text-slate-400 truncate">{candidate.scoala}</p>
                         </div>
                         <button onClick={onClose} className="p-3 -m-3 text-gray-500 hover:text-gray-800 dark:text-slate-400 dark:hover:text-slate-100 flex-shrink-0 ml-4">
                             <span className="sr-only">Închide</span>
