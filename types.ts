@@ -74,6 +74,10 @@ export interface Candidat {
   regiune: Regiune;
   categorieIds: string[];
   pozaUrl: string;
+  // Optional submission coming from external platform. Can be a URL to a file/page or raw HTML/text.
+  submissionUrl?: string;
+  submissionHtml?: string;
+  submissionText?: string;
   promotions?: { [fromStageId: string]: boolean };
   isWinner?: boolean;
   winningCategoryId?: string;
