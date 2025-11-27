@@ -3,6 +3,7 @@ import { Candidat, Jurat, Assignment, Status, Criterion, Category, Regiune } fro
 import Card from './shared/Card';
 import { SearchIcon, SlidersIcon, UserGroupIcon } from './shared/icons';
 import ScoringPanel from './shared/ScoringPanel';
+import CandidateEvaluationModal from './shared/CandidateEvaluationModal';
 
 interface JudgeViewProps {
   candidates: Candidat[];
@@ -19,6 +20,7 @@ const JudgeView: React.FC<JudgeViewProps> = ({ candidates, assignments, criteria
   const [statusFilter, setStatusFilter] = useState<Status | 'all'>('all');
   const [regionFilter, setRegionFilter] = useState<Regiune | 'all'>('all');
   const [selectedAsignmentId, setSelectedAsignmentId] = useState<string | null>(null);
+  const [evaluationAssignmentId, setEvaluationAssignmentId] = useState<string | null>(null);
 
   useEffect(() => {
     if (selectedAsignmentId) {
@@ -62,6 +64,15 @@ const JudgeView: React.FC<JudgeViewProps> = ({ candidates, assignments, criteria
   const selectedAssignment = useMemo(() => {
       return assignments.find(a => a.id === selectedAsignmentId);
   }, [selectedAsignmentId, assignments]);
+
+  const selectedEvaluation = useMemo(() => {
+    if (!evaluationAssignmentId) return undefined;
+    const a = assignments.find(x => x.id === evaluationAssignmentId);
+    if (!a) return undefined;
+    const c = candidates.find(cc => cc.id === a.candidatId);
+    const cat = categories.find(ct => ct.id === a.categorieId);
+    return { a, c: c!, cat };
+  }, [evaluationAssignmentId, assignments, candidates, categories]);
 
   const handleSaveAssignment = (updatedAssignment: Assignment) => {
     setAssignments(prev => prev.map(a => a.id === updatedAssignment.id ? updatedAssignment : a));
@@ -127,7 +138,16 @@ const JudgeView: React.FC<JudgeViewProps> = ({ candidates, assignments, criteria
             const category = categories.find(cat => cat.id === assignment.categorieId);
             if (!candidate) return null;
 
-            return <CandidateCard key={assignment.id} candidate={candidate} category={category} assignment={assignment} onEvaluate={() => openScoringPanel(assignment.id)} />;
+            return (
+              <CandidateCard
+                key={assignment.id}
+                candidate={candidate}
+                category={category}
+                assignment={assignment}
+                onEvaluate={() => openScoringPanel(assignment.id)}
+                onViewSubmission={() => setEvaluationAssignmentId(assignment.id)}
+              />
+            );
           })}
         </div>
       ) : (
@@ -147,6 +167,21 @@ const JudgeView: React.FC<JudgeViewProps> = ({ candidates, assignments, criteria
             isReadOnly={selectedAssignment.status === Status.FINALIZAT}
         />
       )}
+
+      {selectedEvaluation && (
+        <CandidateEvaluationModal
+          open={!!evaluationAssignmentId}
+          candidate={selectedEvaluation.c}
+          assignment={selectedEvaluation.a}
+          category={selectedEvaluation.cat}
+          currentJudge={currentJudge}
+          criteria={criteria}
+          onClose={() => setEvaluationAssignmentId(null)}
+          onUpdateAssignment={(updated) => {
+            setAssignments(prev => prev.map(a => a.id === updated.id ? updated : a));
+          }}
+        />
+      )}
     </div>
   );
 };
@@ -156,9 +191,10 @@ interface CandidateCardProps {
     category?: Category;
     assignment: Assignment;
     onEvaluate: () => void;
+  onViewSubmission: () => void;
 }
 
-const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, category, assignment, onEvaluate }) => {
+const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, category, assignment, onEvaluate, onViewSubmission }) => {
     const statusStyles: Record<Status, string> = {
         [Status.FINALIZAT]: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
         [Status.IN_CURS]: 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/50 dark:text-yellow-300 dark:border-transparent',
@@ -193,6 +229,14 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ candidate, category, assi
           </p>
         </div>
       </div>
+        <div className="mt-3 flex items-center gap-2">
+          <button
+            onClick={(e) => { e.stopPropagation(); onViewSubmission(); }}
+            className="px-3 py-2 text-sm font-semibold bg-gray-100 dark:bg-slate-700 rounded-lg text-ave-dark-blue dark:text-slate-100"
+          >
+            {assignment.status === Status.FINALIZAT ? 'Vezi scorul' : 'Vezi lucrarea'}
+          </button>
+        </div>
     </Card>
     )
 }
